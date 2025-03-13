@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>man page terminal</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="main">
+      <div class="terminal" id="terminal" onclick="focusCommandInput()">
+        <div class="terminal-title">
+          <div class="terminal-title-btn red"></div>
+          <div class="terminal-title-btn yellow"></div>
+          <div class="terminal-title-btn green"></div>
+          <div class="terminal-title-text">About Me</div>
+        </div>
+        <div class="terminal-content" id="terminalContent">
+          <!-- 动态内容会被插入到这里 -->
+        </div>
+        <div class="terminal-input" id="terminalInput">
+          <div class="terminal-input-text">
+            <span class="termain-pointer">➜ ~ </span>
+            <span class="command-display" id="commandBeforeCursor"></span>
+            <span class="cursor" id="cursor">&nbsp;&nbsp;</span>
+            <span class="command-display" id="commandAfterCursor"></span>
+            <input id="commandInput" class="command-input" type="text" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="./src.js"></script>
+  </body>
+</html>
