@@ -15,35 +15,54 @@ const commandAfterCursorEl = document.getElementById("commandAfterCursor");
 // 2. Render Function
 // ---------------------------------------------------
 function renderContent() {
-  /*
-   * TODO: 
-   * 1. Clear the terminalContent element.
-   * 2. Loop through the 'content' array.
-   * 3. Create a new <div> for each object in 'content'.
-   *    - If it is a user command, prepend a prompt like "➜ ~ "
-   *    - If 'needColor' is true, wrap 'colorText' in a <span> with the given class(es).
-   *    - Append the normal 'text' after the colored text.
-   * 4. Append each <div> to the terminalContent.
-   * 5. Scroll terminalContent to the bottom.
-   */
+  terminalContent.innerHTML = "";
+
+  content.forEach((line) => {
+    const div = document.createElement("div");
+    div.className = "terminal-content-text";
+
+    // If it is a user input command, add a prompt
+    if (line.isCommand) {
+      const prefix = document.createElement("span");
+      prefix.textContent = "➜ ~ ";
+      div.appendChild(prefix);
+    }
+
+    // If color is needed, add a span
+    if (line.needColor) {
+      const colorSpan = document.createElement("span");
+      if (Array.isArray(line.class)) {
+        colorSpan.className = line.class.join(" ");
+      } else {
+        colorSpan.className = line.class;
+      }
+      colorSpan.textContent = line.colorText;
+      div.appendChild(colorSpan);
+    }
+
+    // Add the normal text
+    const textSpan = document.createElement("span");
+    textSpan.textContent = line.text;
+    div.appendChild(textSpan);
+
+    terminalContent.appendChild(div);
+  });
+
+  terminalContent.scrollTop = terminalContent.scrollHeight;
 }
 
 // ---------------------------------------------------
 // 3. Cursor & Command Input Helpers
 // ---------------------------------------------------
 function focusCommandInput() {
-  /*
-   * TODO:
-   *  - Focus the hidden text input.
-   */
+  commandInput.focus();
 }
 
 function updateCursor() {
-  /*
-   * TODO:
-   *  - Update cursorPos (selectionStart).
-   *  - Update commandBeforeCursorEl and commandAfterCursorEl to show partial text.
-   */
+  cursorPos = commandInput.selectionStart;
+  const currentCommand = commandInput.value;
+  commandBeforeCursorEl.textContent = currentCommand.slice(0, cursorPos);
+  commandAfterCursorEl.textContent = currentCommand.slice(cursorPos);
 }
 
 // Attach event listeners to handle input changes
@@ -84,29 +103,50 @@ async function displayLoadingDots() {
 }
 
 async function typeLine(line, inputCommand, key) {
-  /*
-   * TODO:
-   *  - Create an object to store text line info (with or without color).
-   *  - Append it to content.
-   *  - Render it character by character for a typing effect.
-   */
+  let obj = {};
+  if (key === "Welcome") {
+    obj = { text: "" };
+  } else {
+    obj = {
+      needColor: true,
+      class: [inputCommand, key, "color-span"],
+      colorText: key,
+      text: ""
+    };
+  }
+
+  content.push(obj);
+  renderContent();
+
+  let currentText = "";
+  for (let char of line) {
+    currentText += char;
+    obj.text = currentText;
+    renderContent();
+    if (isFirstTimeRender) {
+      await delay(10);
+    }
+  }
+  if (isFirstTimeRender) {
+    await delay(100);
+  }
 }
 
 async function typeContent(inputCommand) {
-  /*
-   * TODO:
-   *  - Look up data from aboutCommand for the given inputCommand.
-   *  - For each key in aboutCommand[inputCommand], type out the lines using typeLine function.
-   */
+  if (aboutCommand[inputCommand]) {
+    for (let key in aboutCommand[inputCommand]) {
+      for (let line of aboutCommand[inputCommand][key]) {
+        await typeLine(line, inputCommand, key);
+      }
+    }
+  }
+  renderContent();
 }
 
 // ---------------------------------------------------
 // 5. Command Data (Sample JSON Simulation)
 // ---------------------------------------------------
 const aboutCommand = {
-  /*
-   * TODO: Update with your own data or let students fill these in:
-   */
   "intro": {
     "Welcome": ["Welcome to my website!"],
     "System": [
@@ -156,36 +196,39 @@ const aboutCommand = {
 // 6. The Main Animation (On Page Load)
 // ---------------------------------------------------
 async function animateContent(commandName) {
-  /*
-   * TODO:
-   *  - Clear the 'content' array.
-   *  - Display loading dots (displayLoadingDots).
-   *  - Then type out the content for 'commandName' (typeContent).
-   *  - Finally, push two lines from System about help and clear commands.
-   *  - Set 'isFirstTimeRender' to false.
-   *  - Render and focus input.
-   */
+  content = [];
+  renderContent();
+
+  await displayLoadingDots();
+  await typeContent(commandName);
+
+  
+  content.push({
+    needColor: true,
+    class: ["System", "color-span"],
+    colorText: "System",
+    text: ' Type "help" for a list of supported commands.'
+  });
+  content.push({
+    needColor: true,
+    class: ["System", "color-span"],
+    colorText: "System",
+    text: ' Type "clear" to clear the screen.'
+  });
+  
+  isFirstTimeRender = false;
+  renderContent();
+  focusCommandInput();
 }
 
 // ---------------------------------------------------
 // 7. Command Processing
 // ---------------------------------------------------
 function processCommand() {
-  /*
-   * TODO:
-   * 1. Get user input from commandInput.value.
-   * 2. Clear the commandInput field.
-   * 3. Push a new line object to 'content' with isCommand=true, text=user input.
-   * 4. Check if the command matches known commands (intro, connect, skill, help, clear, etc.).
-   *    - If recognized, call the correct behavior or typeContent.
-   *    - Otherwise, call pushErrorToTerminal().
-   * 5. Re-render the content.
-   * 6. Always refocus the commandInput.
-   */
   const inputCommand = commandInput.value.trim().toLowerCase();
   commandInput.value = "";
 
-  // Example: Show what the user typed
+  // Show what the user typed
   content.push({
     isCommand: true,
     text: inputCommand
@@ -194,22 +237,23 @@ function processCommand() {
   // Check command
   switch (inputCommand) {
     case "help":
-      // TODO: Finish the case for "help"
+      typeContent("help");
       break;
     case "intro":
-      // TODO: Finish the case for "intro"
+      typeContent("intro");
       break;
     case "connect":
-      // TODO: Finish the case for "connect"
+      typeContent("connect");
       break;
     case "skill":
-      // TODO: Finish the case for "skill"
+      typeContent("skill");
       break;
     case "ls":
-      // TODO: Finish the case for "ls"
+      typeContent("ls");
       break;
     case "clear":
-      // TODO: Clear the screen
+      // Clear the screen
+      content = [];
       break;
     default:
       // If command not recognized
@@ -246,9 +290,6 @@ function pushErrorToTerminal(inputCommand) {
 // 9. Entry Point
 // ---------------------------------------------------
 document.addEventListener("DOMContentLoaded", function () {
-  /*
-   * TODO:
-   *  - Call the main animation (animateContent("intro")).
-   *  - Focus the command input afterwards.
-   */
+  animateContent("intro");
+  focusCommandInput();
 });
