@@ -1,6 +1,6 @@
 /**
- * During lecture 4, you learned the basics of how JavaScript interacts with CSS in the DOM
- * to create animations.
+ * During lecture 6 and lecture 7, you learned the basics of how JavaScript interacts with
+ * CSS in the DOM to create animations.
  * 
  * In this assignment, you will create a simple scroll animation using JavaScript and CSS.
  * 
