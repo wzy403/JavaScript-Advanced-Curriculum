@@ -1,5 +1,8 @@
-// In the previous lecture, you experimented with using async/await and Promises.
-// In this assignment, you will gain a deeper understanding of how async/await
+// In the previous lecture, you experimented with the fetch function and explored
+// how async/await and Promises work.
+// In this assignment, you will gain a deeper understanding of how fetch works
+// by rewriting a new fetch function yourself.
+// During this assignment, you will also improve your understanding of how async/await
 // and Promises work, and how they are related to each other.
 
 // TODO: Before you start, take a look at the code in code.js
