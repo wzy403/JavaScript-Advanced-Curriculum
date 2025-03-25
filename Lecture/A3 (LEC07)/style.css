@@ -1,0 +1,56 @@
+body {
+    text-align: center;
+    background-color: #f9f9f9;
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    margin-top: 20px;
+}
+
+.info {
+    font-size: 18px;
+    margin: 10px 0;
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-board {
+    width: 400px;
+    margin: 20px auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 10px;
+}
+
+.target {
+    width: 120px;
+    height: 120px;
+    background-color: #ccc;
+    border-radius: 50%;
+    position: relative;
+}
+
+/* Style for the target, 
+   initially can be hidden or
+   placed at the bottom */
+.aim {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    background-color: brown;
+    border-radius: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    transition: bottom 0.2s ease;
+}
+
+/* Add more effects when .aim appears or is clicked */
+.aim.active {
+    bottom: 50px; /* Simulate the aim popping up */
+}
