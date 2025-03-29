@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Minesweeper</title>
+    <link rel="stylesheet" href="./styles/style.css">
+  </head>
+
+  <body>
+    <div class="Titile">
+      <h1>Minesweeper</h1>
+    </div>
+    <div id="start-section" class="start-section">
+      <div class="start">
+        <button class="start-btn" id="start">Play Game</button>
+      </form>
+    </div>
+    </div>
+
+
+    <div class="game-main disable">
+      <main>
+        <section>
+          <table id="mine-field"></table>
+        </section>
+
+        <aside>
+          <div id="flag-counter">
+            <img src="images/icons/flag_black.svg" alt="flag icon" width="40" />
+            <label>0/n</label>
+          </div>
+          <div id="timer">
+            <img
+              src="images/icons/timer_black.svg"
+              alt="timer icon"
+              width="40"
+            />
+            <label>00:00</label>
+          </div>
+          <button id="start-over">Start Over</button>
+          <button id="pause">Pause</button>
+        </aside>
+      </main>
+    </div>
+
+
+    <script type="module" src="./scripts/main.js"></script>
+  </body>
+</html>
